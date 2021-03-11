@@ -1,4 +1,7 @@
 const {Router} = require('express')
+const fs = require('fs');
+const { UserCreationError } = require('../utils/errors');
+
 
 module.exports = () =>{
     const userApi = Router()
@@ -11,10 +14,17 @@ module.exports = () =>{
     })
 
     userApi.post('/',(req,res)=>{
-        console.log("Im handling POST user Request")
-        res.json({
-            message:"POST USER"
-        })
+        const user = req.body
+        user['id'] =  Math.floor(Math.random() * 100);
+        try{
+            fs.writeFileSync('model/user.json',JSON.stringify(user))
+            res.status(201).json({
+                message:"User created Successfully"
+            })
+        }catch(error){
+            console.log(error)
+            throw new UserCreationError("User Creation Failed")
+        }
     })
 
     userApi.put('/:id',(req,res)=>{
