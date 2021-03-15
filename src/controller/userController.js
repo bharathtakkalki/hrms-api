@@ -16,8 +16,10 @@ module.exports = () =>{
     userApi.post('/',(req,res)=>{
         const user = req.body
         user['id'] =  Math.floor(Math.random() * 100);
+        const allUserData = [...req.allUserData]
+        allUserData.push(user)
         try{
-            fs.writeFileSync('model/user.json',JSON.stringify(user))
+            fs.writeFileSync('model/user.json',JSON.stringify(allUserData))
             res.status(201).json({
                 message:"User created Successfully"
             })

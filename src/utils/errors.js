@@ -18,8 +18,19 @@ class UserCreationError extends Error{
     }
 }
 
+class InternalServerError extends Error{
+    constructor(error){
+        super(JSON.stringify({
+            statusCode:500,
+            code:error.code,
+            message:error.message
+        }))
+    }
+}
+
 
 module.exports ={
     UserValidationError,
-    UserCreationError
+    UserCreationError,
+    InternalServerError
 }
