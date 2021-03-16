@@ -1,7 +1,9 @@
 const { Router } = require("express");
 const { body, validationResult } = require("express-validator");
-const { UserValidationError } = require("../utils/errors");
+const { UserValidationError, UserCreationError } = require("../utils/errors");
 const fs = require('fs');
+const { default: User } = require("../model/user");
+const { Console } = require("console");
 
 module.exports = () => {
   const userMiddleware = Router();
@@ -25,14 +27,15 @@ module.exports = () => {
 
   // Get all Data 
   userMiddleware.post("/",(req,res,next)=>{
-    try{
-      const allUserDataString = fs.readFileSync('model/user.json').toString() 
-      req['allUserData'] = allUserDataString ? JSON.parse(allUserDataString) : []
-      next()
-    }catch(error){
-      console.log(error)
-      throw new InternalServerError({code:"USR-05",message:"Users read failed"})
-    }
+    User.findOne({userName:req.body.userName,email:req.body.email})
+    .then(data =>{
+      if(!data) next()
+      throw new Error("User exists "+JSON.stringify(req.body))
+    })
+    .catch(err =>{
+      console.log(err)
+      throw new UserCreationError("User already exists, Please sign in")
+    })
   })
 
 

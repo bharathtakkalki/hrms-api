@@ -1,32 +1,41 @@
 const {Router} = require('express')
 const fs = require('fs');
+const { default: User } = require('../model/user');
 const { UserCreationError } = require('../utils/errors');
+
 
 
 module.exports = () =>{
     const userApi = Router()
-
+    
     userApi.get('/',(req,res)=>{
         console.log("Im handling get user Request")
-        res.json({
-            message:"GET USER"
+        User.find()
+        .then(data =>{
+            res.statusCode(200).json({
+                data
+            })
         })
+        .catch(err =>{
+            console.log(err)
+            throw new UserCreationError("Unable to fetch Data")
+        })
+
     })
 
     userApi.post('/',(req,res)=>{
-        const user = req.body
-        user['id'] =  Math.floor(Math.random() * 100);
-        const allUserData = [...req.allUserData]
-        allUserData.push(user)
-        try{
-            fs.writeFileSync('model/user.json',JSON.stringify(allUserData))
+        const user = new User(req.body)
+        user.save()
+        .then(data =>{
             res.status(201).json({
+                uuid:data,
                 message:"User created Successfully"
             })
-        }catch(error){
+        })
+        .catch(error =>{
             console.log(error)
             throw new UserCreationError("User Creation Failed")
-        }
+        })
     })
 
     userApi.put('/:id',(req,res)=>{

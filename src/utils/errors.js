@@ -28,9 +28,20 @@ class InternalServerError extends Error{
     }
 }
 
+class DatabaseConnectionError extends Error{
+    constructor(error){
+        super(JSON.stringify({
+            statusCode:500,
+            code:"DB-01",
+            message:error,
+        }))
+    }
+}
+
 
 module.exports ={
     UserValidationError,
     UserCreationError,
-    InternalServerError
+    InternalServerError,
+    DatabaseConnectionError
 }
