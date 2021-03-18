@@ -1,7 +1,7 @@
 const {Router} = require('express')
-const fs = require('fs');
 const { default: User } = require('../model/user');
 const { UserCreationError } = require('../utils/errors');
+import {encryptPassword,createUser} from '../service/userServices/user';
 
 
 
@@ -12,7 +12,7 @@ module.exports = () =>{
         console.log("Im handling get user Request")
         User.find()
         .then(data =>{
-            res.statusCode(200).json({
+            res.status(200).json({
                 data
             })
         })
@@ -23,18 +23,21 @@ module.exports = () =>{
 
     })
 
-    userApi.post('/',(req,res)=>{
-        const user = new User(req.body)
-        user.save()
-        .then(data =>{
-            res.status(201).json({
-                uuid:data,
-                message:"User created Successfully"
+    userApi.post('/',(req,res,next)=>{
+        encryptPassword(req.body.password).then(hashedPassword  =>{
+            createUser({
+                ...req.body,
+                password: hashedPassword
+            }).then(data =>{
+                res.status(201).json({
+                    uuid:data,
+                    message:"User created Successfully"
+                })
             })
         })
-        .catch(error =>{
-            console.log(error)
-            throw new UserCreationError("User Creation Failed")
+        .catch(err =>{
+            console.log(err)
+            next(err)
         })
     })
 
