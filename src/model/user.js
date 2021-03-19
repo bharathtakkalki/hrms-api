@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { userType } from '../utils/constants'
 
 
 const userSchema = new mongoose.Schema({
@@ -23,6 +24,14 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
     },
+    userType:{
+        type:Number, // 0 -> admin 1 -> Employee 
+        required:true,
+        validate:{
+            validator:(values) =>  Object.values(userType).includes(values)
+        },
+        message: props => `${props.value}  invalid user type`
+    },
     phoneNumber:{
         type:String,
         validate:{
@@ -30,11 +39,9 @@ const userSchema = new mongoose.Schema({
         },
         message: props => `${props.value} is not a valid phone number`
     },
-    gender:{
-        type:Number,
-    },
-    dob:{
-        type: Date,
+    userProfile:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'UserProfile'
     },
     createdAt:{
         type:Date,

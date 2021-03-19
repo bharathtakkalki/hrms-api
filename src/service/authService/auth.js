@@ -40,7 +40,7 @@ const authenticate = (req,res,next) =>{
     }
     Auth.findOne({user:userContext.uuid})
     .then(data => {
-        if(!data) throw new AuthorizationError({code:"ATR-02",message:"Invalid access token"})
+        if(!data) throw new AuthorizationError({code:"ATR-02",message:"Invalid access token, User not found"})
         if(data.logoutAt) throw new AuthorizationError({code:"ATR-03",message:"User has logged out,please log in"})
         next()
     }).catch(error => {
