@@ -2,14 +2,14 @@ const {Router} = require('express')
 const { default: User } = require('../model/user');
 const { UserCreationError } = require('../utils/errors');
 import {encryptPassword,createUser} from '../service/userServices/user';
-
+import {authenticate} from '../service/authService/auth';
 
 
 module.exports = () =>{
     const userApi = Router()
     
-    userApi.get('/',(req,res)=>{
-        console.log("Im handling get user Request")
+    userApi.get('/',authenticate,(req,res)=>{
+        console.log("Im handling get user Request",req.user)
         User.find()
         .then(data =>{
             res.status(200).json({

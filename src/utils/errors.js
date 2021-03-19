@@ -18,6 +18,26 @@ class UserCreationError extends Error{
     }
 }
 
+class AuthenticationError extends Error{
+    constructor(errors){
+        super(JSON.stringify({
+            statusCode: 401,
+            code:errors.code,
+            message:errors.message
+        }))
+    }
+}
+
+class AuthorizationError extends Error{
+    constructor(errors){
+        super(JSON.stringify({
+            statusCode: 403,
+            code:errors.code,
+            message:errors.message
+        }))
+    }
+}
+
 class InternalServerError extends Error{
     constructor(error){
         super(JSON.stringify({
@@ -43,5 +63,7 @@ module.exports ={
     UserValidationError,
     UserCreationError,
     InternalServerError,
-    DatabaseConnectionError
+    DatabaseConnectionError,
+    AuthenticationError,
+    AuthorizationError
 }
