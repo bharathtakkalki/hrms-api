@@ -9,7 +9,7 @@ const departmentSchema = new mongoose.Schema({
     description:{
         type:String,
     },
-    user:{
+    users:{
         type:[mongoose.Schema.Types.ObjectId],
         ref:'User'
     },

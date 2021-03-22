@@ -1,5 +1,7 @@
 const { Router } = require('express');
 const { default: authController } = require('./controller/authController');
+const { default: deptController } = require('./controller/deptController');
+const { default: rolesController } = require('./controller/rolesController');
 const userController = require('./controller/userController');
 const middleware = require('./middleware');
 const router = Router()
@@ -7,8 +9,10 @@ const router = Router()
 module.exports = () =>{
 
     router.use(middleware())
-
+    
     router.use('/auth',authController())
+    router.use('/department',deptController())
+    router.use('/roles',rolesController())
     router.use('/user',userController())
     router.use(function(err,req,res,next){
         const error = JSON.parse(err.message)

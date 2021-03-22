@@ -22,3 +22,9 @@ const roleSchema = new mongoose.Schema({
     type: Number,
   },
 });
+
+
+const Roles = mongoose.model('Role',roleSchema)
+
+
+export default Roles

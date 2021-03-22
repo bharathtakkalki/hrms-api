@@ -59,11 +59,34 @@ class DatabaseConnectionError extends Error{
 }
 
 
+class RolesCreationError extends Error {
+    constructor(errors){
+        super(JSON.stringify({
+            statusCode: 400,
+            code:"RLE-01",
+            message:errors
+        }))
+    }
+}
+
+class DeptCreationError extends Error{
+    constructor(errors){
+        super(JSON.stringify({
+            statusCode: 400,
+            code:"DPT-01",
+            message:errors
+        }))
+    }
+}
+
+
 module.exports ={
     UserValidationError,
     UserCreationError,
     InternalServerError,
     DatabaseConnectionError,
     AuthenticationError,
-    AuthorizationError
+    AuthorizationError,
+    RolesCreationError,
+    DeptCreationError
 }
