@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import config from '../../config';
 import User from '../../model/user';
+import { UserCreationError } from '../../utils/errors';
 
 const encryptPassword = (password) => {
     return bcrypt.hash(password,config.salt_rounds)
@@ -11,6 +12,7 @@ const createUser = (data) => {
     return user.save()
     .then(user => user._id)
     .catch(error =>{
+        console.log(error)
         throw new UserCreationError("User Creation Failed")
     })
 

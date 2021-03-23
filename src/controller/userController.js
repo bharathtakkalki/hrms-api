@@ -3,6 +3,7 @@ const { default: User } = require('../model/user');
 const { UserCreationError } = require('../utils/errors');
 import {encryptPassword,createUser} from '../service/userServices/user';
 import {authenticate} from '../service/authService/auth';
+import { createProfile } from '../service/userServices/userProfile';
 
 
 module.exports = () =>{
@@ -23,10 +24,13 @@ module.exports = () =>{
 
     })
 
-    userApi.post('/',(req,res,next)=>{
+    userApi.post('/',async (req,res,next)=>{
+        const userProfile = {...req.body.userProfile}
+        const userProfileId = await createProfile(userProfile)
+        const user = {...req.body,userProfile:userProfileId}
         encryptPassword(req.body.password).then(hashedPassword  =>{
             createUser({
-                ...req.body,
+                ...user,
                 password: hashedPassword
             }).then(data =>{
                 res.status(201).json({

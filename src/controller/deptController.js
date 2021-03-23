@@ -1,6 +1,6 @@
 import {Router} from 'express';
-import { createDepartment } from '../service/deptService/dept';
-import { DeptCreationError } from '../utils/errors';
+import { createDepartment, updateDepartment } from '../service/deptService/dept';
+import { DeptCreationError, InternalServerError } from '../utils/errors';
 
 
 
@@ -22,7 +22,14 @@ export default () => {
 
     deptApi.put('/:id',(req,res,next) => {
         const deptId = req.params.id
-        console.log("Department ",deptId)
+        updateDepartment(req.body,req.department)
+        .then(id => res.status(200).json({
+            id,
+            message:"Successfully Updated"
+        }))
+        .catch(error => { console.log(error)
+            next(new InternalServerError("Error in updation") )
+        })
     })
 
     return deptApi;

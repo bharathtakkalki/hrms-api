@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import { userType } from '../utils/constants'
-
+import {constants}  from '../utils/constants'
 
 const userSchema = new mongoose.Schema({
     firstName:{
@@ -28,7 +27,7 @@ const userSchema = new mongoose.Schema({
         type:Number, // 0 -> admin 1 -> Employee 
         required:true,
         validate:{
-            validator:(values) =>  Object.values(userType).includes(values)
+            validator:(values) =>  Object.values(constants.userType).includes(values)
         },
         message: props => `${props.value}  invalid user type`
     },

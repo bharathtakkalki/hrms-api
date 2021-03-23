@@ -20,12 +20,10 @@ export default () =>{
         const id = req.params.id
         Department.findById(id)
         .then(data =>{
-            console.log(data)
             if(!data) {
-                console.log('heer')
                 throw new DeptCreationError("Department doesnt exist")
             }
-            req.department = data
+            req.department = data.toJSON()
             next()
         })
         .catch(error =>{

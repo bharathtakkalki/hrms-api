@@ -5,7 +5,7 @@ const roleSchema = new mongoose.Schema({
     type: String,
     requrired: true,
   },
-  desrcription: {
+  description: {
     type: String,
   },
   minExperience: {
