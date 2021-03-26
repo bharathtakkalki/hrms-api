@@ -7,6 +7,11 @@ const encryptPassword = (password) => {
     return bcrypt.hash(password,config.salt_rounds)
 }
 
+const userById = (id) =>{
+    console.log(id)
+    return User.findOne({_id:id}).catch(error=>console.log(error))
+}
+
 const createUser = (data) => {
     const user = new User(data)
     return user.save()
@@ -21,5 +26,6 @@ const createUser = (data) => {
 
 module.exports = {
     encryptPassword,
-    createUser
+    createUser,
+    userById
 }

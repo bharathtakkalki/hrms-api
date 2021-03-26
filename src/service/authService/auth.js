@@ -38,21 +38,27 @@ const authenticate = (req,res,next) =>{
         next(new AuthorizationError({code:"ATR-02",message:"Invalid access token"}))
         return;
     }
-    Auth.findOne({user:userContext.uuid})
+    Auth.findOne({accessToken})
     .then(data => {
         if(!data) throw new AuthorizationError({code:"ATR-02",message:"Invalid access token, User not found"})
         if(data.logoutAt) throw new AuthorizationError({code:"ATR-03",message:"User has logged out,please log in"})
+        req.accessToken = accessToken
+        req.user = userContext
         next()
     }).catch(error => {
         console.log(error)
         next(error)
     })
 
+}
 
+const logoutUser = (accessToken) =>{
+    return Auth.findOneAndUpdate({accessToken},{logoutAt:new Date()},{new:true})
 }
 
 module.exports = {
     comparePassword,
     generateAccessToken,
-    authenticate
+    authenticate,
+    logoutUser
 }

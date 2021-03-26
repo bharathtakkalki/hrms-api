@@ -4,10 +4,13 @@ const router = require('./router');
 const bodyParser = require('body-parser');
 import config from "./config";
 import initializeDB, { getDB } from './db';
+import cors from 'cors';
 
 const app = express();
 
 app.use(bodyParser.json())
+
+app.use(cors({exposedHeaders:['Authorization']}))
 
 app.use('/v1',router())
 

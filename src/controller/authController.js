@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {comparePassword,generateAccessToken} from '../service/authService/auth';
+import {comparePassword,generateAccessToken,authenticate,logoutUser} from '../service/authService/auth';
 
 export default () =>{
     const authApi = Router()
@@ -23,8 +23,18 @@ export default () =>{
         })
     })
 
-    authApi.get('/logout',(req,res)=>{
-        console.log("Hanlde logout")
+    authApi.get('/logout',authenticate,(req,res,next)=>{
+        console.log("User Context",req.user)
+        logoutUser(req.accessToken)
+        .then(data =>{
+            res.status(200).json({
+                message:"User Successfully loggedout"
+            })
+        })
+        .catch(error =>{
+            console.log(error)
+            next(new AuthorizationError({code:"ATR-05",message:"Unsuccessful request"}))
+        })
     })
 
     return authApi;
